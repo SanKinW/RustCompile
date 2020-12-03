@@ -20,4 +20,15 @@ public class FunctionDef {
     public List<Instructions> getBody() {
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionDef{" +
+                "id=" + id +
+                ", returnSlots=" + returnSlots +
+                ", paramSlots=" + paramSlots +
+                ", localSlots=" + localSlots +
+                ", body=" + body +
+                '}';
+    }
 }

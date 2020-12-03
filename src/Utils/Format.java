@@ -147,4 +147,33 @@ public class Format {
         Global global = new Global(1, arr.length, items);
         return global;
     }
+
+    public static boolean isInitLibrary(String name, List<LibraryFunction> libraryFunctions) {
+        for (LibraryFunction function : libraryFunctions) {
+            if (function.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
+    public static void clearLocal(List<Variable> variables, List<Constant> constants) {
+        for (Variable variable : variables) {
+            if (variable.getLevel() > 1) variables.remove(variable);
+        }
+        for (Constant constant : constants) {
+            if (constant.getLevel() > 1) constants.remove(constant);
+        }
+    }
+    public static boolean isLocal(String name, List<Constant> constants, List<Variable> variables) {
+        for (Constant constant : constants) {
+            if (constant.getName().equals(name) && constant.getLevel() > 1) return true;
+        }
+        for (Variable variable : variables) {
+            if (variable.getName().equals(name) && variable.getLevel() > 1) return true;
+        }
+        return false;
+    }
+
+    public static void getId() {
+
+    }
 }

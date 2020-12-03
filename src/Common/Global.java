@@ -8,6 +8,7 @@ public class Global {
     private String[] valueItems;
     public Global(Integer isConst) {
         this.isConst = isConst;
+        valueCount = 0;
     }
     public Global(Integer isConst, Integer valueCount, String[] valueItems) {
         this.isConst = isConst;

@@ -29,6 +29,7 @@ public enum Instruction {
     shrl,
     set,
     br,
+    brTrue,
     call,
     ret,
     callname,

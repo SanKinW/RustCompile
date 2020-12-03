@@ -1,4 +1,5 @@
 import Analyser.Analyser;
+import Common.FunctionDef;
 import Common.Global;
 import Tokenizer.Tokenizer;
 import Tokenizer.Token;
@@ -19,6 +20,9 @@ public class Test {
         Analyser.analyseProgram();
         for (Global global : Analyser.getGlobals()) {
             System.out.println(global);
+        }
+        for (FunctionDef functionDef: Analyser.getFunctionDefs()) {
+            System.out.println(functionDef);
         }
     }
 }

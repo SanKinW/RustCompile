@@ -35,6 +35,12 @@ public class Analyser {
 
     private static long functionCount = 0;
 
+    private static int localSlot = 0;
+
+    private static boolean isReturn = false;
+
+    private static List<Param> params;
+
     private static List<Global> globals = new ArrayList<>();
 
     private static List<FunctionDef> functionDefs = new ArrayList<>();
@@ -42,6 +48,8 @@ public class Analyser {
     private static List<Instructions> instructionsList;
 
     private static List<Param> nowParams;
+
+    private static List<LibraryFunction> libraryFunctions = new ArrayList<>();
 
 
 
@@ -53,22 +61,34 @@ public class Analyser {
         while (symbol.getType() == TokenType.LET_KW || symbol.getType() == TokenType.CONST_KW) {
             analyseDeclStmt(1);
         }
-        //填入口程序_start
-        String[] unicode = new String[]{"5F", "73",  "74", "61", "72", "74"}; //_start
-        Global global = new Global(1, unicode.length, unicode);
-        globals.add(global);
-        FunctionDef functionDef = new FunctionDef(globalCount, 0, 0, 0, instructionsList);
-        functionDefs.add(functionDef);
-        functionCount++;
-        globalCount++;
+        List<Instructions> initInstruction = instructionsList;
         while (symbol != null) {
             if (symbol.getType() != TokenType.FN_KW)
                 throw new AnalyzeError(ErrorCode.ExpectedToken);
+            //更新指令集
             instructionsList = new ArrayList<>();
             analyseFunction();
+            //全局变量个数加一
             globalCount++;
+            //函数个数加一
             functionCount++;
         }
+
+        //向全局变量填入口程序_start
+        String[] unicode = new String[]{"5F", "73",  "74", "61", "72", "74"}; //_start
+        Global global = new Global(1, unicode.length, unicode);
+        globals.add(global);
+        //add stacklloc
+        Instructions instruction = new Instructions(Instruction.stackalloc, null);
+        initInstruction.add(instruction);
+        //add call main
+        Long[] para = new Long[]{functionCount};
+        instruction = new Instructions(Instruction.call, para);
+        initInstruction.add(instruction);
+        FunctionDef functionDef = new FunctionDef(globalCount, 0, 0, 0, initInstruction);
+        functionDefs.add(functionDef);
+        functionCount++;
+        globalCount++;
     }
 
     //function -> 'fn' IDENT '(' function_param_list? ')' '->' ty block_stmt
@@ -95,6 +115,9 @@ public class Analyser {
         symbol = readToken();
         if (symbol.getType() != TokenType.R_PAREN)
             analyseFunctionParamList(nowParams);
+        //指向当前的参数
+        params = nowParams;
+
         //右括号
         if (symbol.getType() != TokenType.R_PAREN)
             throw new AnalyzeError(ErrorCode.NoRightParen);
@@ -102,14 +125,32 @@ public class Analyser {
         symbol = readToken();
         if (symbol.getType() != TokenType.ARROW)
             throw new AnalyzeError(ErrorCode.NoArrow);
-        //
+        //返回值
         symbol = readToken();
         String type = analyseTy();
-        analyseBlockStmt(type, 2);
+        Integer returnSlot;
+        if (type.equals("int")) returnSlot = 1;
+        else {
+            returnSlot = 0;
+            isReturn = true;
+        }
 
-        Function function = new Function(type, name, nowParams, functionCount);
+        //分析代码块
+        analyseBlockStmt(type, 2);
+        if (!isReturn)
+            throw new AnalyzeError(ErrorCode.NoReturn);
+
+
+        Function function = new Function(type, name, nowParams, globalCount);
         Functions.add(function);
 
+        FunctionDef functionDef = new FunctionDef(globalCount, returnSlot, nowParams.size(), localSlot, instructionsList);
+        functionDefs.add(functionDef);
+
+        //从列表中去掉局部变量
+        Format.clearLocal(Variables, Constants);
+        localSlot = 0;
+        isReturn = false;
     }
 
 
@@ -138,9 +179,9 @@ public class Analyser {
         params.add(param);
     }
 
-    //CODE
+    //block 代码块
     public static void analyseBlockStmt(String type, Integer level) throws Exception {
-        if (symbol.getType() != TokenType.L_BRACE) throw new AnalyzeError(ErrorCode.NoRightBrace);
+        if (symbol.getType() != TokenType.L_BRACE) throw new AnalyzeError(ErrorCode.NoLeftBrace);
         symbol = readToken();
         while (symbol.getType() != TokenType.R_BRACE) {
             analyseStmt(type, level);
@@ -150,6 +191,7 @@ public class Analyser {
 
     //语句
     public static void analyseStmt(String type, Integer level) throws Exception {
+
         if (symbol.getType() == TokenType.CONST_KW || symbol.getType() == TokenType.LET_KW)
             analyseDeclStmt(level);
         else if (symbol.getType() == TokenType.IF_KW)
@@ -174,8 +216,8 @@ public class Analyser {
             String name = (String) symbol.getVal();
             symbol = readToken();
             if (symbol.getType() == TokenType.ASSIGN) {
-                list.add("load");
                 if (!Format.isConstant(name, Constants) && Format.isVariable(name, Variables)) {
+
                     analyseAssignExpr(name, level);
                 }else {
                     throw new AnalyzeError(ErrorCode.InvalidAssignment);
@@ -183,6 +225,15 @@ public class Analyser {
             }
             else if (symbol.getType() == TokenType.L_PAREN) {
                 if (Format.isFunction(name, Functions)) {
+                    if (Format.isStaticFunction(name)) {
+                        if (!Format.isInitLibrary(name, libraryFunctions)) {
+                            LibraryFunction function = new LibraryFunction(name, globalCount);
+                            libraryFunctions.add(function);
+
+                            Global global = Format.functionNameToGlobalInformation(name);
+                            globals.add(global);
+                        }
+                    }
                     analyseCallExpr(name, level);
                 }else {
                     throw new AnalyzeError(ErrorCode.InValidFunction);
@@ -291,8 +342,7 @@ public class Analyser {
     public static void analyseLiteralExpr() throws Exception {
         if (symbol.getType() == TokenType.UINT_LITERAL) {
             //加载常数
-            Long[] param = new Long[1024];
-            param[0] = (Long) symbol.getVal();
+            Long[] param = new Long[]{(Long) symbol.getVal()};
             Instructions instructions = new Instructions(Instruction.push, param);
             instructionsList.add(instructions);
         }
@@ -365,6 +415,7 @@ public class Analyser {
             analyseLetDeclStmt(level);
         else throw new AnalyzeError(ErrorCode.ExpectedToken);
         if (level == 1) globalCount++;
+        else localSlot++;
     }
 
     //let_decl_stmt -> 'let' IDENT ':' ty ('=' expr)? ';'
@@ -386,14 +437,12 @@ public class Analyser {
             Global global = new Global(0);
             globals.add(global);
 
-            Long[] count = new Long[]{globalCount};
-            Instructions instruction = new Instructions(Instruction.globa, count);
-            instructionsList.add(instruction);
         }
         //局部变量
         else {
-            Variable variable = new Variable(name, -1L, level);
+            Variable variable = new Variable(name, (long)localSlot, level);
             Variables.add(variable);
+            localSlot++;
         }
 
         symbol = readToken();
@@ -406,12 +455,23 @@ public class Analyser {
             throw new AnalyzeError(ErrorCode.InvalidType);
 
         if (symbol.getType() == TokenType.ASSIGN) {
+            Instructions instruction;
+            if (level == 1) {
+                Long[] count = new Long[]{globalCount};
+                //取地址
+                instruction = new Instructions(Instruction.globa, count);
+                instructionsList.add(instruction);
+            }else {
+                Long[] count = new Long[]{(long) localSlot};
+                instruction = new Instructions(Instruction.loca, count);
+                instructionsList.add(instruction);
+            }
 
             symbol = readToken();
             analyseExpr(level);
 
             //存值
-            Instructions instruction = new Instructions(Instruction.store, null);
+            instruction = new Instructions(Instruction.store, null);
             instructionsList.add(instruction);
 
         }
@@ -445,8 +505,13 @@ public class Analyser {
         }
         //局部变量
         else {
-            Constant constant = new Constant(name, -1L, level);
+            Constant constant = new Constant(name, (long) localSlot, level);
             Constants.add(constant);
+
+            //生成 loca 指令，准备赋值
+            Long[] count = new Long[]{(long) localSlot};
+            Instructions instruction = new Instructions(Instruction.loca, count);
+            instructionsList.add(instruction);
         }
 
 
@@ -480,9 +545,32 @@ public class Analyser {
             throw new AnalyzeError(ErrorCode.NoIfKeyWord);
         symbol = readToken();
         analyseExpr(level);
-
+        //把 0 压入栈
+        Long[] param = new Long[]{0L};
+        Instructions instruction = new Instructions(Instruction.push, param);
+        instructionsList.add(instruction);
+        // cmp
+        instruction = new Instructions(Instruction.cmp, null);
+        instructionsList.add(instruction);
+        // set.lt
+        instruction = new Instructions(Instruction.set, null);
+        instructionsList.add(instruction);
+        //brTrue
+        instruction = new Instructions(Instruction.brTrue, new Long[]{1L});
+        instructionsList.add(instruction);
+        //br
+        Instructions ifInstruction = new Instructions(Instruction.br, null);
+        instructionsList.add(ifInstruction);
+        int index = instructionsList.size();
 
         analyseBlockStmt(type, level + 1);
+
+        Instructions jumpInstruction = new Instructions(Instruction.br, null);
+        instructionsList.add(jumpInstruction);
+        int ifEnd = instructionsList.size();
+
+        long dis = instructionsList.size() - index;
+        ifInstruction.setParamIds(new Long[]{dis});
 
         if (symbol.getType() == TokenType.ELSE_KW) {
             symbol = readToken();
@@ -491,6 +579,8 @@ public class Analyser {
             else
                 analyseBlockStmt(type, level + 1);
         }
+        dis = instructionsList.size() - ifEnd;
+        jumpInstruction.setParamIds(new Long[]{dis});
     }
 
     //while_stmt -> 'while' expr block_stmt
@@ -498,10 +588,41 @@ public class Analyser {
         if (symbol.getType() != TokenType.WHILE_KW)
             throw new AnalyzeError(ErrorCode.NoWhileKeyWord);
 
+        int whileStart = instructionsList.size() - 1;
         symbol = readToken();
         analyseExpr(level);
 
+
+        //把 0 压入栈
+        Long[] param = new Long[]{0L};
+        Instructions instruction = new Instructions(Instruction.push, param);
+        instructionsList.add(instruction);
+        // cmp
+        instruction = new Instructions(Instruction.cmp, null);
+        instructionsList.add(instruction);
+        // set.lt
+        instruction = new Instructions(Instruction.set, null);
+        instructionsList.add(instruction);
+        //brTrue
+        instruction = new Instructions(Instruction.brTrue, new Long[]{1L});
+        instructionsList.add(instruction);
+        //br
+        Instructions jumpInstruction = new Instructions(Instruction.br, null);
+        instructionsList.add(jumpInstruction);
+        int index = instructionsList.size();
+
         analyseBlockStmt(type, level + 1);
+
+        int whileEnd = instructionsList.size();
+        long dis = whileStart - whileEnd;
+        //跳至while 判断语句
+        instruction = new Instructions(Instruction.br, new Long[]{dis});
+        instructionsList.add(instruction);
+
+
+        dis = instructionsList.size() - index;
+        jumpInstruction.setParamIds(new Long[]{dis});
+
     }
 
     //return_stmt -> 'return' expr? ';'
@@ -512,8 +633,17 @@ public class Analyser {
         symbol = readToken();
         if (symbol.getType() != TokenType.SEMICOLON) {
             if (type.equals("int")) {
+                //取返回地址
+                Instructions instructions = new Instructions(Instruction.arga, new Long[]{0L});
+                instructionsList.add(instructions);
                 analyseExpr(level);
-
+                //放入地址中
+                instructions = new Instructions(Instruction.store, null);
+                instructionsList.add(instructions);
+                //ret
+                instructions = new Instructions(Instruction.ret, null);
+                instructionsList.add(instructions);
+                isReturn = true;
             }
             else if (type.equals("void"))
                 throw new AnalyzeError(ErrorCode.InvalidReturn);
@@ -532,7 +662,14 @@ public class Analyser {
         symbol = readToken();
     }
 
+
+
+
     public static List<Global> getGlobals() {
         return globals;
+    }
+
+    public static List<FunctionDef> getFunctionDefs() {
+        return functionDefs;
     }
 }
