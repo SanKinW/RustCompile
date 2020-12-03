@@ -1,0 +1,15 @@
+const first : int = 233;
+let second : int = 123;
+let third : int;
+fn foo(i: int) -> int {
+    let result : int = 0;
+    if(i > 0) {
+        let out : int = 1;
+        result = out;
+    }
+    return result;
+}
+
+fn main() -> void {
+    putint(foo(-123456));
+}
