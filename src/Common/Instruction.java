@@ -28,6 +28,8 @@ public enum Instruction {
     neg,
     shrl,
     set,
+    setGt,
+    setLt,
     br,
     brTrue,
     call,

@@ -163,6 +163,7 @@ public class Format {
             if (constant.getLevel() > 1) constants.remove(constant);
         }
     }
+
     public static boolean isLocal(String name, List<Constant> constants, List<Variable> variables) {
         for (Constant constant : constants) {
             if (constant.getName().equals(name) && constant.getLevel() > 1) return true;
@@ -173,7 +174,115 @@ public class Format {
         return false;
     }
 
-    public static void getId() {
+    public static long getId(String name, Integer level, List<Constant> constants, List<Variable> variables) {
+        int len = variables.size();
+        for (int i = len - 1; i >= 0; --i) {
+            Variable variable = variables.get(i);
+            if (variable.getName().equals(name) && variable.getLevel() <= level) return variable.getId();
+        }
+        len = constants.size();
+        for (int i = len - 1; i >= 0; --i) {
+            Constant constant = constants.get(i);
+            if (constant.getName().equals(name) && constant.getLevel() <= level) return constant.getId();
+        }
+        return -1L;
+    }
 
+    public static long getParamPos(String name, List<Param> params) {
+        for (int i = 0; i < params.size(); ++i) {
+            if (params.get(i).getName().equals(name)) return i;
+        }
+        return -1;
+    }
+
+    public static long getKuId(String name, List<LibraryFunction> libraryFunctions) {
+        for (LibraryFunction function : libraryFunctions) {
+            if (function.getName().equals(name)) return function.getId();
+        }
+        return -1;
+    }
+
+    public static long getFunctionId(String name, List<Function> functions) {
+        for (Function function : functions) {
+            if (function.getName().equals(name)) return function.getId();
+        }
+        return -1;
+    }
+
+    public static boolean hasReturn(String name, List<Function> functions) {
+        if (isStaticFunction(name)) {
+            if (name.equals("getint") || name.equals("getdouble") || name.equals("getchar")) {
+                return true;
+            }
+            else return false;
+        }
+        for (Function function : functions) {
+            if (function.getName().equals(name)) {
+                if (function.getType().equals("int")) return true;
+            }else return false;
+        }
+        return false;
+    }
+
+    public static void instructionGenerate(TokenType type, List<Instructions> instructionsList) {
+        Instructions instruction;
+        switch (type) {
+            case LT :
+                instruction = new Instructions(Instruction.cmp, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.setLt, null);
+                instructionsList.add(instruction);
+                break;
+            case LE:
+                instruction = new Instructions(Instruction.cmp, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.setGt, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.not, null);
+                instructionsList.add(instruction);
+                break;
+            case GT :
+                instruction = new Instructions(Instruction.cmp, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.setGt, null);
+                instructionsList.add(instruction);
+                break;
+            case GE :
+                instruction = new Instructions(Instruction.cmp, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.setLt, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.not, null);
+                instructionsList.add(instruction);
+                break;
+            case PLUS:
+                instruction = new Instructions(Instruction.add, null);
+                instructionsList.add(instruction);
+                break;
+            case MINUS:
+                instruction = new Instructions(Instruction.sub, null);
+                instructionsList.add(instruction);
+                break;
+            case MUL:
+                instruction = new Instructions(Instruction.mul, null);
+                instructionsList.add(instruction);
+                break;
+            case DIV:
+                instruction = new Instructions(Instruction.div, null);
+                instructionsList.add(instruction);
+                break;
+            case EQ:
+                instruction = new Instructions(Instruction.xor, null);
+                instructionsList.add(instruction);
+                instruction = new Instructions(Instruction.not, null);
+                instructionsList.add(instruction);
+                break;
+            case NEQ:
+                instruction = new Instructions(Instruction.xor, null);
+                instructionsList.add(instruction);
+                break;
+            default:
+                break;
+        }
     }
 }
