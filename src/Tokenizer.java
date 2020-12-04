@@ -158,7 +158,10 @@ public class Tokenizer {
             if (input == '/') {
                 while (true) {
                     input = inputStream.read();
-                    if (input == '\n') break;
+                    if (input == '\n') {
+                        input = inputStream.read();
+                        break;
+                    }
                 }
             }else throw new Exception();
         }

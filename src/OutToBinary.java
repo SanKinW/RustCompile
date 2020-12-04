@@ -87,7 +87,7 @@ public class OutToBinary {
             if(instruction.getParam() != null){
                 List<Byte>  x;
                 if(instruction.getInstruction() == 1)
-                    x = int2bytes(8,instruction.getParam());
+                    x = long2bytes(8,instruction.getParam());
                 else
                     x = int2bytes(4,instruction.getParam());
                 output.addAll(x);
