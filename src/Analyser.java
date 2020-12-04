@@ -75,7 +75,7 @@ public class Analyser {
 
         //向全局变量填入口程序_start
         String unicode = "5F7374617274"; //_start
-        Global global = new Global(1, 6, unicode);
+        Global global = new Global(1, 6, "_start");
         globals.add(global);
         //add stacklloc
         Instructions instruction = new Instructions(Instruction.stackalloc, 0);

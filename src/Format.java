@@ -137,7 +137,7 @@ public class Format {
             int asc = (int) arr[i];
             items = items + String.format("%2X", asc);
         }
-        Global global = new Global(1, arr.length, items);
+        Global global = new Global(1, arr.length, name);
         return global;
     }
 
