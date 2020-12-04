@@ -27,13 +27,11 @@ public class App {
         OutToBinary binary = new OutToBinary(Analyser.getGlobals(), Analyser.getStartFunction(), Analyser.getFunctionDefs());
 
         DataOutputStream out = new DataOutputStream(new FileOutputStream(new File(args[2])));
-        //DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
         List<Byte> bytes = binary.generate();
         byte[] resultBytes = new byte[bytes.size()];
         for (int i = 0; i < bytes.size(); ++i) {
             resultBytes[i] = bytes.get(i);
         }
-        //out.writeBytes(bytes.toString());
         out.write(resultBytes);
     }
 }
