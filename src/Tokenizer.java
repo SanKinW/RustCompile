@@ -21,7 +21,7 @@ public class Tokenizer {
                     Token token = getToken(inputStream);
                     if (token != null) {
                         tokenList.add(token);
-                        //System.out.print(token.getVal() + " ");
+                        System.out.print(token.getVal() + " ");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -196,7 +196,7 @@ public class Tokenizer {
     public static Token readToken() {
         if (it.hasNext()) {
             Token token = it.next();
-            System.out.print(token.getVal()+" ");
+            //System.out.print(token.getVal()+" ");
             return token;
         }
         return null;
