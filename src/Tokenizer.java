@@ -1,9 +1,3 @@
-package Tokenizer;
-
-import Utils.Format;
-import Common.TokenType;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -195,7 +189,7 @@ public class Tokenizer {
 
     public static Token readToken() {
         if (it.hasNext()) {
-            Token  token = it.next();
+            Token token = it.next();
             //System.out.println(token);
             return token;
         }

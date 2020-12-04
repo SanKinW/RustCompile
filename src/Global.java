@@ -1,5 +1,3 @@
-package Common;
-
 import java.util.Arrays;
 
 public class Global {

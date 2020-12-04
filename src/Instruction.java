@@ -1,5 +1,3 @@
-package Common;
-
 public enum Instruction {
     nop(0x00),
     push(0x01),

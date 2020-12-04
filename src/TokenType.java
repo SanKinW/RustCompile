@@ -1,5 +1,3 @@
-package Common;
-
 public enum TokenType {
     FN_KW("FN_KW"),
     LET_KW("LET_KW"),

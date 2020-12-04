@@ -1,9 +1,3 @@
-package Binary;
-
-import Common.FunctionDef;
-import Common.Global;
-import Common.Instructions;
-
 import java.util.ArrayList;
 import java.util.List;
 

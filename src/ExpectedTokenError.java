@@ -1,10 +1,5 @@
-package Error;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import Tokenizer.Token;
-import Common.TokenType;
 
 public class ExpectedTokenError extends CompileError {
     private static final long serialVersionUID = 1L;

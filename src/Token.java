@@ -1,7 +1,3 @@
-package Tokenizer;
-
-import Common.TokenType;
-
 public class Token {
     private TokenType type;
     private Object val;

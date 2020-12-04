@@ -1,13 +1,15 @@
-package Common;
-
-import java.security.acl.LastOwnerException;
-
-public class Constant {
+public class Variable {
     private String name;
     private Integer id;
     private Integer level;
 
-    public Constant(String name, Integer id, Integer level) {
+    public Variable(String name, Integer level) {
+        this.name = name;
+        this.id = null;
+        this.level = level;
+    }
+
+    public Variable(String name, Integer id, Integer level) {
         this.name = name;
         this.id = id;
         this.level = level;

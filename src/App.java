@@ -1,10 +1,3 @@
-import Analyser.Analyser;
-import Binary.OutToBinary;
-import Common.FunctionDef;
-import Common.Global;
-import Tokenizer.Tokenizer;
-import Tokenizer.Token;
-
 import java.io.*;
 import java.util.List;
 

@@ -1,5 +1,3 @@
-package Common;
-
 public class Param {
     private String type;
     private String name;

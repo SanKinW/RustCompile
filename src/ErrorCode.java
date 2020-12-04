@@ -1,5 +1,3 @@
-package Error;
-
 public enum ErrorCode {
     NoError, // Should be only used internally.
     StreamError, EOF, InvalidInput, InvalidIdentifier, IntegerOverflow, // int32_t overflow.

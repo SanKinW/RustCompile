@@ -1,5 +1,3 @@
-package Common;
-
 public class LibraryFunction {
     private String name;
     private Integer id;

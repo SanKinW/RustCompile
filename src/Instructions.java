@@ -1,5 +1,3 @@
-package Common;
-
 public class Instructions {
     private Instruction instruction;
     private Integer param;
