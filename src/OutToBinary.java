@@ -8,7 +8,7 @@ public class OutToBinary {
     private List<FunctionDef> functionDefs;
     private List<Byte> output;
 
-    // DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
+    DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
 
     int magic=0x72303b3e;
     int version=0x00000001;
@@ -59,7 +59,7 @@ public class OutToBinary {
             System.out.println("globalValueCount="+globalValueCount);
 
             output.addAll(globalValue);
-            // out.writeBytes(globalValue.toString());
+            out.writeBytes(globalValue.toString());
             System.out.println(global.getValueItems());
         }
 
@@ -133,24 +133,7 @@ public class OutToBinary {
         List<Byte>  AB=new ArrayList<>();
         for (int i=0;i<valueString.length();i++){
             char ch=valueString.charAt(i);
-            if (ch!='\\')
-                AB.add((byte)(ch&0xff));
-            else {
-                i++;
-                ch=valueString.charAt(i);
-                if (ch=='\\')
-                    AB.add((byte)('\\'&0xff));
-                else if (ch=='\"')
-                    AB.add((byte)('\"'&0xff));
-                else if (ch=='\'')
-                    AB.add((byte)('\''&0xff));
-                else if (ch=='n')
-                    AB.add((byte)('\n'&0xff));
-                else if (ch=='r')
-                    AB.add((byte)('\r'&0xff));
-                else if (ch=='t')
-                    AB.add((byte)('\t'&0xff));
-            }
+            AB.add((byte)(ch&0xff));
         }
         return AB;
     }
