@@ -19,7 +19,9 @@ public class Tokenizer {
             if (!Format.isSpace(input)) {
                 try {
                     Token token = getToken(inputStream);
-                    if (token != null) tokenList.add(token);
+                    if (token != null) {
+                        tokenList.add(token);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
