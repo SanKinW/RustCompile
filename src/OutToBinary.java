@@ -29,7 +29,7 @@ public class OutToBinary {
         output.addAll(version);
 
         //globals.count
-        List<Byte> globalCount=int2bytes(4,globals.size());
+        List<Byte> globalCount=int2bytes(4, globals.size());
         output.addAll(globalCount);
 
         //out.writeBytes(globalCount.toString());
@@ -48,18 +48,19 @@ public class OutToBinary {
             //value items
             List<Byte> globalValue;
             if (global.getValueItems() == null) {
+                globalValueCount = int2bytes(4, 8);
                 globalValue = long2bytes(8,0L);
-                output.addAll(globalValueCount);
             }
             else {
                 globalValue = String2bytes(global.getValueItems());
                 globalValueCount = int2bytes(4, globalValue.size());
-                output.addAll(globalValueCount);
             }
-            System.out.println("globalValueCount="+globalValueCount);
 
+
+            output.addAll(globalValueCount);
             output.addAll(globalValue);
             //out.writeBytes(globalValue.toString());
+            System.out.println("globalValueCount="+globalValueCount);
             System.out.println(global.getValueItems());
         }
 

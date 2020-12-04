@@ -21,6 +21,7 @@ public class Tokenizer {
                     Token token = getToken(inputStream);
                     if (token != null) {
                         tokenList.add(token);
+                        System.out.print(token.getVal() + " ");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
