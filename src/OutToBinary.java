@@ -8,7 +8,7 @@ public class OutToBinary {
     private List<FunctionDef> functionDefs;
     private List<Byte> output;
 
-    //DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
+    DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
 
     int magic=0x72303b3e;
     int version=0x00000001;
@@ -51,7 +51,8 @@ public class OutToBinary {
             if (global.getValueItems() == null) globalValue = long2bytes(8,0L);
             else globalValue = String2bytes(global.getValueItems());
             output.addAll(globalValue);
-            //out.writeBytes(globalValue.toString());
+            out.writeBytes(globalValue.toString());
+            System.out.println(global.getValueItems());
         }
 
         //functions.count

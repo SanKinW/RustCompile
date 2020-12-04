@@ -215,19 +215,69 @@ public class Analyser {
     //表达式
     public static void analyseExpr(Integer level) throws Exception {
         if (symbol.getType() == TokenType.MINUS) {
-            Instructions instruction = new Instructions(Instruction.push, 0);
-            instructionsList.add(instruction);
-            if (stackOp.empty()) stackOp.push(TokenType.MINUS);
-            else {
-                int front = OperatorPrecedence.getOrder(stackOp.peek());
-                int next = OperatorPrecedence.getOrder(TokenType.MINUS);
-                if (priority[front][next] > 0) {
-                    TokenType type = stackOp.pop();
-                    Format.instructionGenerate(type, instructionsList);
-                }
-                stackOp.push(TokenType.MINUS);
+            Instructions negInstruction = new Instructions(Instruction.neg, 0);
+            symbol = Tokenizer.readToken();
+            if (symbol.getType() == TokenType.MINUS) {
+                analyseExpr(level);
+                instructionsList.add(negInstruction);
             }
-            analyseNegateExpr(level);
+            else if (symbol.getType() == TokenType.UINT_LITERAL) {
+                analyseLiteralExpr();
+                instructionsList.add(negInstruction);
+                if (Format.isOperator(symbol)) {
+                    analyseOperatorExpr(level);
+                }
+            }else if (symbol.getType() == TokenType.IDENT) {
+                String name = (String) symbol.getVal();
+                symbol = Tokenizer.readToken();
+                if (symbol.getType() == TokenType.L_PAREN) {
+                    stackOp.push(TokenType.L_PAREN);
+                    if (Format.isFunction(name, Functions)) {
+                        Integer id;
+                        Instructions instruction;
+                        // 是库函数
+                        if (Format.isStaticFunction(name)) {
+                            LibraryFunction function = new LibraryFunction(name, globalCount);
+                            libraryFunctions.add(function);
+                            id = globalCount;
+                            globalCount++;
+
+                            Global global = Format.functionNameToGlobalInformation(name);
+                            globals.add(global);
+                            instruction = new Instructions(Instruction.callname, id);
+                        }
+                        //自定义函数
+                        else {
+                            id = Format.getFunctionId(name, Functions);
+                            instruction = new Instructions(Instruction.call, id);
+                        }
+                        analyseCallExpr(name, level);
+
+                        //弹栈
+                        while (stackOp.peek() != TokenType.L_PAREN) {
+                            TokenType tokenType = stackOp.pop();
+                            Format.instructionGenerate(tokenType, instructionsList);
+                        }
+                        stackOp.pop();
+
+                        instructionsList.add(instruction);
+                    }else {
+                        throw new AnalyzeError(ErrorCode.InValidFunction);
+                    }
+                    instructionsList.add(negInstruction);
+                    if (Format.isOperator(symbol)) {
+                        analyseOperatorExpr(level);
+                    }
+                }else if (Format.isOperator(symbol)) {
+                    analyseIdentExpr(name, level);
+                    instructionsList.add(negInstruction);
+                    analyseOperatorExpr(level);
+                }
+                else {
+                    analyseIdentExpr(name, level);
+                    instructionsList.add(negInstruction);
+                }
+            }
         }
         else if (symbol.getType() == TokenType.IDENT) {
             String name = (String) symbol.getVal();
@@ -258,6 +308,9 @@ public class Analyser {
                     throw new AnalyzeError(ErrorCode.InvalidAssignment);
                 }
                 onAssign = false;
+                if (Format.isOperator(symbol)) {
+                    analyseOperatorExpr(level);
+                }
             }
             else if (symbol.getType() == TokenType.L_PAREN) {
                 stackOp.push(TokenType.L_PAREN);

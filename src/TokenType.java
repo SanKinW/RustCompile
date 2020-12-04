@@ -37,7 +37,4 @@ public enum TokenType {
         this.kind = kind;
     }
 
-    public String getKind() {
-        return kind;
-    }
 }

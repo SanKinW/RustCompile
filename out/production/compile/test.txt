@@ -1,24 +1,19 @@
-let i : int = 2 ;
-fn foo ( ) -> int {
-    let i : int = 1 ;
-    putint ( i ) ;
-    putln ( ) ;
-    return i ;
-}
-fn bar ( ) -> void {
-    putint ( i ) ;
-    putln ( ) ;
-    i = i + 1 ;
+let a : int = 0 ;
+let b : int = 1 ;
+fn swap ( ) -> void {
+    let temp : int = a ;
+    a = b ;
+    b = temp ;
 }
 fn main ( ) -> void {
-    let i : int = 1 ;
-    putint ( i ) ;
+    a = getint ( ) ;
+    b = getint ( ) ;
+    putint ( a ) ;
+    putchar ( 32 ) ;
+    putint ( b ) ;
     putln ( ) ;
-    putint ( foo ( ) ) ;
-    putln ( ) ;
-    bar ( ) ;
-    bar ( ) ;
-    bar ( ) ;
-    putint ( foo ( ) ) ;
-    putln ( ) ;
+    swap ( ) ;
+    putint ( a ) ;
+    putchar ( 32 ) ;
+    putint ( b ) ;
 }
