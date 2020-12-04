@@ -70,6 +70,8 @@ public class Analyser {
             //函数个数加一
             functionCount++;
         }
+        if (!Format.hasMain(Functions))
+            throw new AnalyzeError(ErrorCode.NoMainFunction);
 
         //向全局变量填入口程序_start
         String unicode = "5F7374617274"; //_start

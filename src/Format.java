@@ -29,8 +29,8 @@ public class Format {
 
     public static boolean isStaticFunction(String name) {
         if (name.equals("getint") || name.equals("getdouble") || name.equals("getchar") ||
-            name.equals("putint") || name.equals("putdouble") || name.equals("putchar") ||
-            name.equals("putstr") || name.equals("putln"))
+                name.equals("putint") || name.equals("putdouble") || name.equals("putchar") ||
+                name.equals("putstr") || name.equals("putln"))
             return true;
         return false;
     }
@@ -103,9 +103,8 @@ public class Format {
     public static boolean checkParam(String name, List<Function> functions, Integer num) {
         if (isStaticFunction(name)) {
             if (name.equals("getint") || name.equals("getdouble") || name.equals("getchar") || name.equals("putln")) {
-                return num==0;
-            }
-            else return num==1;
+                return num == 0;
+            } else return num == 1;
         }
         for (Function function : functions) {
             if (function.getName().equals(name)) {
@@ -116,7 +115,7 @@ public class Format {
     }
 
     public static boolean isOperator(Token symbol) {
-        if (    symbol.getType() != TokenType.PLUS &&
+        if (symbol.getType() != TokenType.PLUS &&
                 symbol.getType() != TokenType.MINUS &&
                 symbol.getType() != TokenType.MUL &&
                 symbol.getType() != TokenType.DIV &&
@@ -211,13 +210,12 @@ public class Format {
         if (isStaticFunction(name)) {
             if (name.equals("getint") || name.equals("getdouble") || name.equals("getchar")) {
                 return true;
-            }
-            else return false;
+            } else return false;
         }
         for (Function function : functions) {
             if (function.getName().equals(name)) {
                 if (function.getType().equals("int")) return true;
-            }else return false;
+            } else return false;
         }
         return false;
     }
@@ -225,7 +223,7 @@ public class Format {
     public static void instructionGenerate(TokenType type, List<Instructions> instructionsList) {
         Instructions instruction;
         switch (type) {
-            case LT :
+            case LT:
                 instruction = new Instructions(Instruction.cmp, null);
                 instructionsList.add(instruction);
                 instruction = new Instructions(Instruction.setLt, null);
@@ -239,13 +237,13 @@ public class Format {
                 instruction = new Instructions(Instruction.not, null);
                 instructionsList.add(instruction);
                 break;
-            case GT :
+            case GT:
                 instruction = new Instructions(Instruction.cmp, null);
                 instructionsList.add(instruction);
                 instruction = new Instructions(Instruction.setGt, null);
                 instructionsList.add(instruction);
                 break;
-            case GE :
+            case GE:
                 instruction = new Instructions(Instruction.cmp, null);
                 instructionsList.add(instruction);
                 instruction = new Instructions(Instruction.setLt, null);
@@ -282,6 +280,14 @@ public class Format {
             default:
                 break;
         }
+
+    }
+
+    public static boolean hasMain(List<Function> functions) {
+        for (Function function : functions) {
+            if (function.getName().equals("main")) return true;
+        }
+        return false;
     }
 
 }

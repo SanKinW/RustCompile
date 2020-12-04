@@ -4,6 +4,7 @@ public enum ErrorCode {
     NoBegin, NoEnd, NeedIdentifier, ConstantNeedValue, NoSemicolon, InvalidVariableDeclaration, InvalidType, InvalidReturn,
     IncompleteExpression, NotDeclared, AssignToConstant, DuplicateDeclaration, NotInitialized, InvalidAssignment, InvalidOperator,
     InvalidPrint, ExpectedToken, NoLeftParen, NoRightParen, NoLeftBrace, NoRightBrace, NoArrow, NoLetKeyWord, NoColon,
-    NoConstantKeyWord, NoIfKeyWord, NoWhileKeyWord, NoReturn, InvalidParam,
+    NoConstantKeyWord, NoIfKeyWord, NoWhileKeyWord, NoReturn, InvalidParam, NoMainFunction,
     InValidFunction;
+
 }
