@@ -43,7 +43,6 @@ public class OutToBinary {
 
             // value count
             List<Byte> globalValueCount = int2bytes(4, global.getValueCount());
-            output.addAll(globalValueCount);
             //out.writeBytes(globalValueCount.toString());
 
             //value items
@@ -57,6 +56,7 @@ public class OutToBinary {
                 globalValueCount = int2bytes(4, globalValue.size());
                 output.addAll(globalValueCount);
             }
+            System.out.println("globalValueCount="+globalValueCount);
 
             output.addAll(globalValue);
             // out.writeBytes(globalValue.toString());
