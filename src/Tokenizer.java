@@ -13,11 +13,12 @@ public class Tokenizer {
 
     public static void processSource(InputStream inputStream) throws IOException {
         KeyWords = Type.init();
-        tokenList = new ArrayList<Token>();
+        tokenList = new ArrayList<>();
         input = inputStream.read();
         while (input != -1) {
             if (!Format.isSpace(input)) {
                 try {
+                    System.out.println("new token");
                     Token token = getToken(inputStream);
                     if (token != null) {
                         tokenList.add(token);

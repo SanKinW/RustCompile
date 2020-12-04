@@ -130,17 +130,18 @@ public class Analyser {
             isReturn = true;
         }
 
+        Global global = Format.functionNameToGlobalInformation(name);
+        globals.add(global);
+
+        Function function = new Function(type, name, params, functionCount);
+        Functions.add(function);
+
         //分析代码块
         analyseBlockStmt(type, 2);
 
         if (!isReturn)
             throw new AnalyzeError(ErrorCode.NoReturn);
 
-        Global global = Format.functionNameToGlobalInformation(name);
-        globals.add(global);
-
-        Function function = new Function(type, name, params, functionCount);
-        Functions.add(function);
 
         //ret
         Instructions instructions = new Instructions(Instruction.ret, null);

@@ -9,6 +9,10 @@ public class App {
         InputStream inputStream = new FileInputStream(args[1]);
         //InputStream inputStream = new FileInputStream(file_path);
         Tokenizer.processSource(inputStream);
+        System.out.println("\n-----------------Tokenizer end");
+        for (Token token : Tokenizer.getTokenList()) {
+            System.out.println(token);
+        }
         System.out.println("\n------------------Analyser Start");
         Analyser.analyseProgram();
         System.out.println(Analyser.getGlobals().size());
