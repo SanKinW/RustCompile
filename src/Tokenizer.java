@@ -75,6 +75,7 @@ public class Tokenizer {
             while (true) {
                 input = inputStream.read();
                 if (input == '\\') {
+                    val = val + temp;
                     input = inputStream.read();
                     if(!Format.isEscapeSequence(input)) throw new Exception();
                     else  {
