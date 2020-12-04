@@ -3,13 +3,13 @@ package Common;
 import java.util.List;
 
 public class FunctionDef {
-    private Long id;
+    private Integer id;
     private Integer returnSlots;
     private Integer paramSlots;
     private Integer localSlots;
     private List<Instructions> body;
 
-    public FunctionDef(Long name, Integer returnSlots, Integer paramSlots, Integer localSlots, List<Instructions> body) {
+    public FunctionDef(Integer name, Integer returnSlots, Integer paramSlots, Integer localSlots, List<Instructions> body) {
         this.id = name;
         this.returnSlots = returnSlots;
         this.paramSlots = paramSlots;
@@ -17,18 +17,35 @@ public class FunctionDef {
         this.body = body;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getLocalSlots() {
+        return localSlots;
+    }
+
+    public Integer getParamSlots() {
+        return paramSlots;
+    }
+
+    public Integer getReturnSlots() {
+        return returnSlots;
+    }
+
+
     public List<Instructions> getBody() {
         return body;
     }
 
     @Override
     public String toString() {
-        return "FunctionDef{" +
+        return "FunctionDef{\n" +
                 "id=" + id +
-                ", returnSlots=" + returnSlots +
-                ", paramSlots=" + paramSlots +
-                ", localSlots=" + localSlots +
-                ", body=" + body +
+                ",\nreturnSlots=" + returnSlots +
+                ",\nparamSlots=" + paramSlots +
+                ",\nlocalSlots=" + localSlots +
+                ",\nbody=" + body +'\n'+
                 '}';
     }
 }

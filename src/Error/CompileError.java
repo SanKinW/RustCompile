@@ -1,4 +1,4 @@
-package error;
+package Error;
 
 
 public abstract class CompileError extends Exception {

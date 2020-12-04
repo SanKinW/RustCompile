@@ -1,4 +1,5 @@
 import Analyser.Analyser;
+import Binary.OutToBinary;
 import Common.FunctionDef;
 import Common.Global;
 import Tokenizer.Tokenizer;
@@ -24,5 +25,8 @@ public class Test {
         for (FunctionDef functionDef: Analyser.getFunctionDefs()) {
             System.out.println(functionDef);
         }
+        System.out.println("---------------生成二进制");
+        OutToBinary binary = new OutToBinary(Analyser.getGlobals(), Analyser.getFunctionDefs());
+        binary.generate();
     }
 }

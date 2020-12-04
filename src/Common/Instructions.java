@@ -1,31 +1,37 @@
 package Common;
 
-import java.util.Arrays;
-
 public class Instructions {
     private Instruction instruction;
-    private Long[] paramIds;
+    private Integer param;
 
     public Instructions() {}
 
-    public Instructions(Instruction instruction, Long[] paramIds) {
+    public Instructions(Instruction instruction, Integer paramIds) {
         this.instruction = instruction;
-        this.paramIds = paramIds;
+        this.param = paramIds;
+    }
+
+    public Integer getInstruction() {
+        return instruction.getNum();
     }
 
     public void setInstruction(Instruction instruction) {
         this.instruction = instruction;
     }
 
-    public void setParamIds(Long[] paramIds) {
-        this.paramIds = paramIds;
+    public Integer getParam() {
+        return param;
+    }
+
+    public void setParam(Integer param) {
+        this.param = param;
     }
 
     @Override
     public String toString() {
-        return "Instructions{" +
+        return "Instructions{\n" +
                 "instruction=" + instruction +
-                ", paramIds=" + Arrays.toString(paramIds) +
+                ",\nparamIds=" + param + '\n'+
                 '}';
     }
 }

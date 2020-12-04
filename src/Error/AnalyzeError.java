@@ -1,4 +1,4 @@
-package error;
+package Error;
 
 
 public class AnalyzeError extends CompileError {

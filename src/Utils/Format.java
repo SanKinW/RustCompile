@@ -139,10 +139,10 @@ public class Format {
     public static Global functionNameToGlobalInformation(String name) {
         char[] arr = name.toCharArray();
         int len = arr.length;
-        String[] items = new String[len];
+        String items = "";
         for (int i = 0; i < arr.length; ++i) {
             int asc = (int) arr[i];
-            items[i] = String.format("%2X", asc);
+            items = items + String.format("%2X", asc);
         }
         Global global = new Global(1, arr.length, items);
         return global;
@@ -156,11 +156,15 @@ public class Format {
     }
 
     public static void clearLocal(List<Variable> variables, List<Constant> constants) {
-        for (Variable variable : variables) {
-            if (variable.getLevel() > 1) variables.remove(variable);
+        int len = variables.size();
+        for (int i = len - 1; i >= 0; --i) {
+            Variable variable = variables.get(i);
+            if (variable.getLevel() > 1) variables.remove(i);
         }
-        for (Constant constant : constants) {
-            if (constant.getLevel() > 1) constants.remove(constant);
+        len = constants.size();
+        for (int i = len - 1; i >= 0; --i) {
+            Constant constant = constants.get(i);
+            if (constant.getLevel() > 1) constants.remove(i);
         }
     }
 
@@ -174,7 +178,7 @@ public class Format {
         return false;
     }
 
-    public static long getId(String name, Integer level, List<Constant> constants, List<Variable> variables) {
+    public static int getId(String name, Integer level, List<Constant> constants, List<Variable> variables) {
         int len = variables.size();
         for (int i = len - 1; i >= 0; --i) {
             Variable variable = variables.get(i);
@@ -185,24 +189,24 @@ public class Format {
             Constant constant = constants.get(i);
             if (constant.getName().equals(name) && constant.getLevel() <= level) return constant.getId();
         }
-        return -1L;
+        return -1;
     }
 
-    public static long getParamPos(String name, List<Param> params) {
+    public static int getParamPos(String name, List<Param> params) {
         for (int i = 0; i < params.size(); ++i) {
             if (params.get(i).getName().equals(name)) return i;
         }
         return -1;
     }
 
-    public static long getKuId(String name, List<LibraryFunction> libraryFunctions) {
+    public static int getKuId(String name, List<LibraryFunction> libraryFunctions) {
         for (LibraryFunction function : libraryFunctions) {
             if (function.getName().equals(name)) return function.getId();
         }
         return -1;
     }
 
-    public static long getFunctionId(String name, List<Function> functions) {
+    public static int getFunctionId(String name, List<Function> functions) {
         for (Function function : functions) {
             if (function.getName().equals(name)) return function.getId();
         }
@@ -285,4 +289,5 @@ public class Format {
                 break;
         }
     }
+
 }

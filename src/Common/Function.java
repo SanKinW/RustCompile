@@ -6,9 +6,9 @@ public class Function {
     private String type;
     private String name;
     private List<Param> params;
-    private Long id;
+    private Integer id;
 
-    public Function(String type, String name, List<Param> params, Long id) {
+    public Function(String type, String name, List<Param> params, Integer id) {
         this.type = type;
         this.name = name;
         this.params = params;
@@ -27,7 +27,7 @@ public class Function {
         return params;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 }

@@ -2,7 +2,7 @@ package Common;
 
 public class Variable {
     private String name;
-    private Long id;
+    private Integer id;
     private Integer level;
 
     public Variable(String name, Integer level) {
@@ -11,9 +11,9 @@ public class Variable {
         this.level = level;
     }
 
-    public Variable(String name, Long val, Integer level) {
+    public Variable(String name, Integer id, Integer level) {
         this.name = name;
-        this.id = val;
+        this.id = id;
         this.level = level;
     }
 
@@ -21,7 +21,7 @@ public class Variable {
         return name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

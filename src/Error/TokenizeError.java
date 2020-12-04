@@ -1,4 +1,4 @@
-package error;
+package Error;
 
 
 public class TokenizeError extends CompileError {

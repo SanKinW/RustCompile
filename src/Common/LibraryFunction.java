@@ -2,8 +2,8 @@ package Common;
 
 public class LibraryFunction {
     private String name;
-    private Long id;
-    public LibraryFunction(String name, Long id) {
+    private Integer id;
+    public LibraryFunction(String name, Integer id) {
         this.name = name;
         this.id = id;
     }
@@ -12,7 +12,7 @@ public class LibraryFunction {
         return name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 }
