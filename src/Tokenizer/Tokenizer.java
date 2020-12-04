@@ -17,10 +17,9 @@ public class Tokenizer {
     private static List<Token> tokenList;
     private static Iterator<Token> it;
 
-    public static void processSource(String filePath) throws IOException {
+    public static void processSource(InputStream inputStream) throws IOException {
         KeyWords = Type.init();
         tokenList = new ArrayList<Token>();
-        InputStream inputStream = new FileInputStream(filePath);
         input = inputStream.read();
         while (input != -1) {
             if (!Format.isSpace(input)) {
@@ -69,7 +68,7 @@ public class Tokenizer {
                 val = val + temp;
                 input = inputStream.read();
                 if (!Format.isDigit(input)) {
-                    Long num = Long.parseLong(val);
+                    Integer num = Integer.parseInt(val);
                     token = new Token(TokenType.UINT_LITERAL, num);
                     break;
                 }

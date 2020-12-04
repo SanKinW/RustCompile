@@ -29,9 +29,9 @@ public class Instructions {
 
     @Override
     public String toString() {
-        return "Instructions{\n" +
-                "instruction=" + instruction +
-                ",\nparamIds=" + param + '\n'+
+        return "\n      Instructions{\n" +
+                "           instruction=" + instruction +
+                ",\n        paramIds=" + param + '\n'+
                 '}';
     }
 }

@@ -41,11 +41,11 @@ public class FunctionDef {
     @Override
     public String toString() {
         return "FunctionDef{\n" +
-                "id=" + id +
-                ",\nreturnSlots=" + returnSlots +
-                ",\nparamSlots=" + paramSlots +
-                ",\nlocalSlots=" + localSlots +
-                ",\nbody=" + body +'\n'+
+                "   id=" + id +
+                ",\n    returnSlots=" + returnSlots +
+                ",\n    paramSlots=" + paramSlots +
+                ",\n    localSlots=" + localSlots +
+                ",\n    body=" + body +'\n'+
                 '}';
     }
 }

@@ -3,11 +3,15 @@ let second : int = 123;
 let third : int;
 fn foo(i: int) -> int {
     let result : int = 0;
+    let test : int;
     if(i > 0) {
         let out : int = 1;
         result = out;
     }
     return result;
+}
+fn test()-> void {
+
 }
 
 fn main() -> void {
