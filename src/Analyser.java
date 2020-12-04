@@ -290,15 +290,11 @@ public class Analyser {
                 if (onAssign)
                     throw new AnalyzeError(ErrorCode.InvalidAssignment);
                 //考虑对参数赋值？
-                if (!Format.isConstant(name, Constants) && Format.isVariable(name, Variables)) {
+                if ((!Format.isConstant(name, Constants) && Format.isVariable(name, Variables)) || Format.isParam(name, params)) {
                     if (Format.isLocal(name, Constants, Variables)) {
                         Integer id = Format.getId(name, level, Constants, Variables);
                         //取出值
                         Instructions instruction = new Instructions(Instruction.loca, id);
-                        instructionsList.add(instruction);
-                    }else if (Format.isParam(name, params)) {
-                        Integer id = Format.getParamPos(name, params);
-                        Instructions instruction = new Instructions(Instruction.arga, id);
                         instructionsList.add(instruction);
                     }
                     else {
