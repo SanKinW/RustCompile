@@ -158,6 +158,7 @@ public class Analyser {
     public static void analyseFunctionParamList() throws Exception {
         analyseFunctionParam();
         while (symbol.getType() == TokenType.COMMA) {
+            symbol = Tokenizer.readToken();
             analyseFunctionParam();
         }
     }
@@ -474,7 +475,6 @@ public class Analyser {
         symbol = Tokenizer.readToken();
         analyseExpr(level);
 
-        System.out.println(symbol.getType());
 
         if (symbol.getType() != TokenType.R_PAREN)
             throw new AnalyzeError(ErrorCode.NoRightParen);
@@ -749,6 +749,9 @@ public class Analyser {
                 instructionsList.add(instructions);
 
                 analyseExpr(level);
+                while (!stackOp.empty()) {
+                    Format.instructionGenerate(stackOp.pop(), instructionsList);
+                }
                 //放入地址中
                 instructions = new Instructions(Instruction.store, null);
                 instructionsList.add(instructions);
