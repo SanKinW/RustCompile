@@ -361,6 +361,9 @@ public class Analyser {
     public static void analyseAssignExpr(String name, Integer level) throws Exception {
         symbol = Tokenizer.readToken();
         analyseExpr(level);
+        while (!stackOp.empty()) {
+            Format.instructionGenerate(stackOp.pop(), instructionsList);
+        }
         //存储到地址中
         Instructions instruction = new Instructions(Instruction.store, null);
         instructionsList.add(instruction);

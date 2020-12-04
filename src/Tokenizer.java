@@ -75,31 +75,11 @@ public class Tokenizer {
             while (true) {
                 input = inputStream.read();
                 if (input == '\\') {
-                    val = val + temp;
+                    val = val + '\\';
                     input = inputStream.read();
                     if(!Format.isEscapeSequence(input)) throw new Exception();
                     else  {
-                        switch (input) {
-                            case '\'':
-                                temp =  '\'';
-                                break;
-                            case '\"':
-                                temp = '\"';
-                                break;
-                            case '\\':
-                                temp = '\\';
-                                break;
-                            case 'n':
-                                temp = '\n';
-                                break;
-                            case 'r':
-                                temp = '\r';
-
-                                break;
-                            case 't':
-                                temp = '\t';
-                                break;
-                        }
+                        temp = (char) input;
                     }
                 }
                 else if (Format.isRegularChar(input)) {
