@@ -18,7 +18,6 @@ public class Tokenizer {
         while (input != -1) {
             if (!Format.isSpace(input)) {
                 try {
-                    System.out.println("new token");
                     Token token = getToken(inputStream);
                     if (token != null) {
                         tokenList.add(token);

@@ -11,7 +11,7 @@ public class App {
         Tokenizer.processSource(inputStream);
         System.out.println("\n-----------------Tokenizer end");
         for (Token token : Tokenizer.getTokenList()) {
-            System.out.println(token);
+            //System.out.println(token);
         }
         System.out.println("\n------------------Analyser Start");
         Analyser.analyseProgram();

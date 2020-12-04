@@ -130,8 +130,6 @@ public class Analyser {
             isReturn = true;
         }
 
-        Global global = Format.functionNameToGlobalInformation(name);
-        globals.add(global);
 
         Function function = new Function(type, name, params, functionCount);
         Functions.add(function);
@@ -146,6 +144,9 @@ public class Analyser {
         //ret
         Instructions instructions = new Instructions(Instruction.ret, null);
         instructionsList.add(instructions);
+
+        Global global = Format.functionNameToGlobalInformation(name);
+        globals.add(global);
 
         FunctionDef functionDef = new FunctionDef(globalCount, returnSlot, params.size(), localSlot, instructionsList);
         functionDefs.add(functionDef);
