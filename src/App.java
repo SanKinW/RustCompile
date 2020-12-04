@@ -10,10 +10,15 @@ public class App {
         //InputStream inputStream = new FileInputStream(file_path);
         Tokenizer.processSource(inputStream);
         for (Token token : Tokenizer.getTokenList()) {
-            System.out.print(token.getVal());
+            System.out.print(token.getVal()+" ");
         }
         System.out.println("------------------Analyser Start");
         Analyser.analyseProgram();
+        System.out.println(Analyser.getGlobals().size());
+        for (Global global : Analyser.getGlobals()) {
+            System.out.println(global);
+        }
+        System.out.println("------------------function");
         System.out.println(Analyser.getStartFunction());
         for (FunctionDef functionDef : Analyser.getFunctionDefs()) {
             System.out.println(functionDef);

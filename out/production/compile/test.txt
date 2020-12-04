@@ -1,19 +1,18 @@
-const first : int = 233;
-let second : int = 123;
-let third : int;
-fn foo(i: int) -> int {
-    let result : int = 0;
-    let test : int;
-    if(i > 0) {
-        let out : int = 1;
-        result = out;
+fn main()->void{
+    let c : int = 0;
+    let i : int;
+    while c<10 {
+        i = 0;
+        while i < 9 - c {
+            putchar(32);
+            i = i+1;
+        }
+        i = 0;
+        while i < 2 * c + 1 {
+            putchar(42);
+            i = i + 1;
+        }
+        putln();
+        c=c+1;
     }
-    return result;
-}
-fn test()-> void {
-
-}
-
-fn main() -> void {
-    putint(foo(-123456));
 }

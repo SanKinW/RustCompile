@@ -96,8 +96,6 @@ public class Analyser {
         if (Format.isFunction(name, Functions))
             throw new AnalyzeError(ErrorCode.DuplicateDeclaration);
 
-        Global global = Format.functionNameToGlobalInformation(name);
-        globals.add(global);
 
 
         //左括号
@@ -136,6 +134,8 @@ public class Analyser {
         if (!isReturn)
             throw new AnalyzeError(ErrorCode.NoReturn);
 
+        Global global = Format.functionNameToGlobalInformation(name);
+        globals.add(global);
 
         Function function = new Function(type, name, params, functionCount);
         Functions.add(function);
@@ -263,19 +263,13 @@ public class Analyser {
                     Instructions instruction;
                     // 是库函数
                     if (Format.isStaticFunction(name)) {
-                        // 未填入全局变量表
-                        if (!Format.isInitLibrary(name, libraryFunctions)) {
-                            LibraryFunction function = new LibraryFunction(name, globalCount);
-                            libraryFunctions.add(function);
-                            id = globalCount++;
+                        LibraryFunction function = new LibraryFunction(name, globalCount);
+                        libraryFunctions.add(function);
+                        id = globalCount;
+                        globalCount++;
 
-                            Global global = Format.functionNameToGlobalInformation(name);
-                            globals.add(global);
-                        }
-                        // 已填入
-                        else {
-                            id = Format.getKuId(name, libraryFunctions);
-                        }
+                        Global global = Format.functionNameToGlobalInformation(name);
+                        globals.add(global);
                         instruction = new Instructions(Instruction.callname, id);
                     }
                     //自定义函数
@@ -314,7 +308,9 @@ public class Analyser {
         else if (symbol.getType() == TokenType.L_PAREN) {
             stackOp.push(TokenType.L_PAREN);
             analyseGroupExpr(level);
-
+            if (Format.isOperator(symbol)) {
+                analyseOperatorExpr(level);
+            }
         }
         else throw new AnalyzeError(ErrorCode.InvalidType);
     }
@@ -475,6 +471,8 @@ public class Analyser {
 
         symbol = Tokenizer.readToken();
         analyseExpr(level);
+
+        System.out.println(symbol.getType());
 
         if (symbol.getType() != TokenType.R_PAREN)
             throw new AnalyzeError(ErrorCode.NoRightParen);
