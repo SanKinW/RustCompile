@@ -268,13 +268,13 @@ public class Format {
                 instructionsList.add(instruction);
                 break;
             case EQ:
-                instruction = new Instructions(Instruction.xor, null);
+                instruction = new Instructions(Instruction.cmp, null);
                 instructionsList.add(instruction);
                 instruction = new Instructions(Instruction.not, null);
                 instructionsList.add(instruction);
                 break;
             case NEQ:
-                instruction = new Instructions(Instruction.xor, null);
+                instruction = new Instructions(Instruction.cmp, null);
                 instructionsList.add(instruction);
                 break;
             default:

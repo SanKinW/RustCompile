@@ -140,10 +140,11 @@ public class Analyser {
         if (!isReturn)
             throw new AnalyzeError(ErrorCode.NoReturn);
 
-
-        //ret
-        Instructions instructions = new Instructions(Instruction.ret, null);
-        instructionsList.add(instructions);
+        if (type.equals("void")) {
+            //ret
+            Instructions instructions = new Instructions(Instruction.ret, null);
+            instructionsList.add(instructions);
+        }
 
         Global global = Format.functionNameToGlobalInformation(name);
         globals.add(global);
@@ -193,6 +194,7 @@ public class Analyser {
         while (symbol.getType() != TokenType.R_BRACE) {
             analyseStmt(type, level);
         }
+
         symbol = Tokenizer.readToken();
     }
 
@@ -345,8 +347,12 @@ public class Analyser {
                     stackOp.pop();
 
                     instructionsList.add(instruction);
+
                 }else {
                     throw new AnalyzeError(ErrorCode.InValidFunction);
+                }
+                if (Format.isOperator(symbol)) {
+                    analyseOperatorExpr(level);
                 }
             }else if (Format.isOperator(symbol)) {
                 analyseIdentExpr(name, level);
@@ -435,10 +441,16 @@ public class Analyser {
     //call_param_list -> expr (',' expr)*
     public static int analyseCallParamList(Integer level) throws Exception {
         analyseExpr(level);
+        while (!stackOp.empty() && stackOp.peek() != TokenType.L_PAREN) {
+            Format.instructionGenerate(stackOp.pop(), instructionsList);
+        }
         int count = 1;
         while (symbol.getType() == TokenType.COMMA) {
             symbol = Tokenizer.readToken();
             analyseExpr(level);
+            while (!stackOp.empty() && stackOp.peek() != TokenType.L_PAREN) {
+                Format.instructionGenerate(stackOp.pop(), instructionsList);
+            }
             count++;
         }
         return count;
@@ -740,10 +752,7 @@ public class Analyser {
 
         analyseBlockStmt(type, level + 1);
 
-        Instructions jumpInstruction = new Instructions(Instruction.br, null);
-        instructionsList.add(jumpInstruction);
         int ifEnd = instructionsList.size();
-
         int dis = instructionsList.size() - index;
         ifInstruction.setParam(dis);
 
@@ -754,8 +763,6 @@ public class Analyser {
             else
                 analyseBlockStmt(type, level + 1);
         }
-        dis = instructionsList.size() - ifEnd;
-        jumpInstruction.setParam(dis);
     }
 
     //while_stmt -> 'while' expr block_stmt
@@ -807,6 +814,7 @@ public class Analyser {
                 instructionsList.add(instructions);
 
                 analyseExpr(level);
+
                 while (!stackOp.empty()) {
                     Format.instructionGenerate(stackOp.pop(), instructionsList);
                 }
@@ -823,6 +831,9 @@ public class Analyser {
         while (!stackOp.empty()) {
             Format.instructionGenerate(stackOp.pop(), instructionsList);
         }
+        //ret
+        Instructions instructions = new Instructions(Instruction.ret, null);
+        instructionsList.add(instructions);
         symbol = Tokenizer.readToken();
     }
 
