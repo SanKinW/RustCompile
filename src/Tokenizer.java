@@ -11,20 +11,16 @@ public class Tokenizer {
     private static List<Token> tokenList;
     private static Iterator<Token> it;
 
-    public static void processSource(InputStream inputStream) throws IOException {
+    public static void processSource(InputStream inputStream) throws Exception {
         KeyWords = Type.init();
         tokenList = new ArrayList<>();
         input = inputStream.read();
         while (input != -1) {
             if (!Format.isSpace(input)) {
-                try {
-                    Token token = getToken(inputStream);
-                    if (token != null) {
-                        tokenList.add(token);
-                        System.out.print(token.getVal() + " ");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                Token token = getToken(inputStream);
+                if (token != null) {
+                    tokenList.add(token);
+                    //System.out.print(token.getVal() + " ");
                 }
             }
             else input = inputStream.read();
