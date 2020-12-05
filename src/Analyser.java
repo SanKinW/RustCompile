@@ -53,6 +53,7 @@ public class Analyser {
         }
         List<Instructions> initInstruction = instructionsList;
         while (symbol != null) {
+            System.out.println(symbol);
             if (symbol.getType() != TokenType.FN_KW)
                 throw new AnalyzeError(ErrorCode.ExpectedToken);
             //更新指令集
