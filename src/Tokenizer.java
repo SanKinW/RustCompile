@@ -21,7 +21,7 @@ public class Tokenizer {
                     Token token = getToken(inputStream);
                     if (token != null) {
                         tokenList.add(token);
-                        //System.out.print(token.getVal() + " ");
+                        System.out.print(token.getVal() + " ");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -154,6 +154,7 @@ public class Tokenizer {
             }
             else token = new Token(TokenType.MINUS, "-");
         }
+
         else if (input == '/') {
             input = inputStream.read();
             if (input == '/') {

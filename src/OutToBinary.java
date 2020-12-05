@@ -8,7 +8,7 @@ public class OutToBinary {
     private List<FunctionDef> functionDefs;
     private List<Byte> output;
 
-    //DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
+    DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
 
     int magic=0x72303b3e;
     int version=0x00000001;
@@ -42,7 +42,7 @@ public class OutToBinary {
             //out.writeBytes(isConst.toString());
 
             // value count
-            List<Byte> globalValueCount = int2bytes(4, global.getValueCount());
+            List<Byte> globalValueCount;
             //out.writeBytes(globalValueCount.toString());
 
             //value items
@@ -59,8 +59,8 @@ public class OutToBinary {
 
             output.addAll(globalValueCount);
             output.addAll(globalValue);
-            //out.writeBytes(globalValue.toString());
-            System.out.println("globalValueCount="+globalValueCount);
+            System.out.println(globalValue.toString());
+            //System.out.println("globalValueCount="+globalValueCount);
             System.out.println(global.getValueItems());
         }
 
@@ -110,7 +110,7 @@ public class OutToBinary {
             //type
             List<Byte> type = int2bytes(1, instruction.getInstruction());
             output.addAll(type);
-            //out.writeBytes(type.toString());
+            out.writeBytes(type.toString());
 
             if(instruction.getParam() != null){
                 List<Byte>  x;
@@ -119,7 +119,7 @@ public class OutToBinary {
                 else
                     x = int2bytes(4,instruction.getParam());
                 output.addAll(x);
-                //out.writeBytes(x.toString());
+                out.writeBytes(x.toString());
             }
         }
     }
@@ -141,7 +141,7 @@ public class OutToBinary {
 
     private List<Byte> long2bytes(int length, long target) {
         ArrayList<Byte> bytes = new ArrayList<>();
-        int start = 8*(length-1);
+        int start = 8 * (length-1);
         for(int i = 0 ; i < length; i++){
             bytes.add((byte) (( target >> ( start - i * 8 )) & 0xFF ));
         }
@@ -150,7 +150,7 @@ public class OutToBinary {
 
     private ArrayList<Byte> int2bytes(int length,int target){
         ArrayList<Byte> bytes = new ArrayList<>();
-        int start = 8*(length-1);
+        int start = 8 * (length-1);
         for(int i = 0 ; i < length; i++){
             bytes.add((byte) (( target >> ( start - i * 8 )) & 0xFF ));
         }

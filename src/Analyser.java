@@ -74,7 +74,6 @@ public class Analyser {
             throw new AnalyzeError(ErrorCode.NoMainFunction);
 
         //向全局变量填入口程序_start
-        String unicode = "5F7374617274"; //_start
         Global global = new Global(1, 6, "_start");
         globals.add(global);
         //add stacklloc
@@ -742,22 +741,58 @@ public class Analyser {
         Instructions instruction = new Instructions(Instruction.brTrue, 1);
         instructionsList.add(instruction);
         //br
-        Instructions ifInstruction = new Instructions(Instruction.br, null);
+        Instructions ifInstruction = new Instructions(Instruction.br, 0);
         instructionsList.add(ifInstruction);
         int index = instructionsList.size();
 
         analyseBlockStmt(type, level + 1);
 
-        int ifEnd = instructionsList.size();
-        int dis = instructionsList.size() - index;
-        ifInstruction.setParam(dis);
 
-        if (symbol.getType() == TokenType.ELSE_KW) {
-            symbol = Tokenizer.readToken();
-            if (symbol.getType() == TokenType.IF_KW)
-                analyseIfStmt(type, level);
-            else
-                analyseBlockStmt(type, level + 1);
+        int size = instructionsList.size();
+
+        if (instructionsList.get(size -1).getInstruction() == 0x49) {
+            int dis = instructionsList.size() - index;
+            ifInstruction.setParam(dis);
+
+            if (symbol.getType() == TokenType.ELSE_KW) {
+                symbol = Tokenizer.readToken();
+                if (symbol.getType() == TokenType.IF_KW)
+                    analyseIfStmt(type, level);
+                else {
+                    analyseBlockStmt(type, level + 1);
+                    size = instructionsList.size();
+
+                    if (instructionsList.get(size -1).getInstruction() != 0x49) {
+                        instruction = new Instructions(Instruction.br, 0);
+                        instructionsList.add(instruction);
+                    }
+                }
+            }
+        }
+        else {
+            Instructions jumpInstruction = new Instructions(Instruction.br, null);
+            instructionsList.add(jumpInstruction);
+            int jump = instructionsList.size();
+
+            int dis = instructionsList.size() - index;
+            ifInstruction.setParam(dis);
+
+            if (symbol.getType() == TokenType.ELSE_KW) {
+                symbol = Tokenizer.readToken();
+                if (symbol.getType() == TokenType.IF_KW)
+                    analyseIfStmt(type, level);
+                else {
+                    analyseBlockStmt(type, level + 1);
+                    size = instructionsList.size();
+
+                    if (instructionsList.get(size -1).getInstruction() != 0x49) {
+                        instruction = new Instructions(Instruction.br, 0);
+                        instructionsList.add(instruction);
+                    }
+                }
+            }
+            dis = instructionsList.size() - jump;
+            jumpInstruction.setParam(dis);
         }
     }
 
