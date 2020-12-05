@@ -26,4 +26,13 @@ public class Variable {
     public Integer getLevel() {
         return level;
     }
+
+    @Override
+    public String toString() {
+        return "Variable{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", level=" + level +
+                '}';
+    }
 }

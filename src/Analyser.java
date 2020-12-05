@@ -53,7 +53,6 @@ public class Analyser {
         }
         List<Instructions> initInstruction = instructionsList;
         while (symbol != null) {
-            System.out.println(symbol);
             if (symbol.getType() != TokenType.FN_KW)
                 throw new AnalyzeError(ErrorCode.ExpectedToken);
             //更新指令集
@@ -289,12 +288,17 @@ public class Analyser {
             if (symbol.getType() == TokenType.ASSIGN) {
                 if (onAssign)
                     throw new AnalyzeError(ErrorCode.InvalidAssignment);
-                //考虑对参数赋值？
+
                 if ((!Format.isConstant(name, Constants) && Format.isVariable(name, Variables)) || Format.isParam(name, params)) {
                     if (Format.isLocal(name, Constants, Variables)) {
                         Integer id = Format.getId(name, level, Constants, Variables);
                         //取出值
                         Instructions instruction = new Instructions(Instruction.loca, id);
+                        instructionsList.add(instruction);
+                    }else if (Format.isParam(name, params)) {
+                        Integer id = Format.getParamPos(name, params);
+                        //取出值
+                        Instructions instruction = new Instructions(Instruction.arga, alloc + id);
                         instructionsList.add(instruction);
                     }
                     else {
@@ -784,8 +788,8 @@ public class Analyser {
                     analyseIfStmt(type, level);
                 else {
                     analyseBlockStmt(type, level + 1);
-                    size = instructionsList.size();
 
+                    size = instructionsList.size();
                     if (instructionsList.get(size -1).getInstruction() != 0x49) {
                         instruction = new Instructions(Instruction.br, 0);
                         instructionsList.add(instruction);
@@ -895,5 +899,9 @@ public class Analyser {
 
     public static List<FunctionDef> getFunctionDefs() {
         return functionDefs;
+    }
+
+    public static List<Param> getParams() {
+        return params;
     }
 }

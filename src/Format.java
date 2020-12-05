@@ -192,12 +192,6 @@ public class Format {
         return -1;
     }
 
-    public static int getKuId(String name, List<LibraryFunction> libraryFunctions) {
-        for (LibraryFunction function : libraryFunctions) {
-            if (function.getName().equals(name)) return function.getId();
-        }
-        return -1;
-    }
 
     public static int getFunctionId(String name, List<Function> functions) {
         for (Function function : functions) {
