@@ -284,4 +284,13 @@ public class Format {
         return false;
     }
 
+    public static boolean hasReturnInMain(List<Function> functions) {
+        for (Function function : functions) {
+            if (function.getName().equals("main")) {
+                if (function.getType().equals("int")) return true;
+                break;
+            }
+        }
+        return false;
+    }
 }

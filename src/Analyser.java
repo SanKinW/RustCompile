@@ -79,7 +79,7 @@ public class Analyser {
         //add stacklloc
         Instructions instruction = new Instructions(Instruction.stackalloc, 0);
         initInstruction.add(instruction);
-        if (isReturn) {
+        if (Format.hasReturnInMain(Functions)) {
             //add call main
             instruction.setParam(1);
             instruction = new Instructions(Instruction.call, functionCount-1);
@@ -227,7 +227,7 @@ public class Analyser {
     //表达式
     public static void analyseExpr(Integer level) throws Exception {
         if (symbol.getType() == TokenType.MINUS) {
-            Instructions negInstruction = new Instructions(Instruction.neg, 0);
+            Instructions negInstruction = new Instructions(Instruction.neg, null);
             symbol = Tokenizer.readToken();
             if (symbol.getType() == TokenType.MINUS) {
                 analyseExpr(level);
@@ -775,11 +775,8 @@ public class Analyser {
                 else {
                     analyseBlockStmt(type, level + 1);
                     size = instructionsList.size();
-
-                    if (instructionsList.get(size -1).getInstruction() != 0x49) {
-                        instruction = new Instructions(Instruction.br, 0);
-                        instructionsList.add(instruction);
-                    }
+                    instruction = new Instructions(Instruction.br, 0);
+                    instructionsList.add(instruction);
                 }
             }
         }
@@ -797,8 +794,8 @@ public class Analyser {
                     analyseIfStmt(type, level);
                 else {
                     analyseBlockStmt(type, level + 1);
-                        instruction = new Instructions(Instruction.br, 0);
-                        instructionsList.add(instruction);
+                    instruction = new Instructions(Instruction.br, 0);
+                    instructionsList.add(instruction);
                 }
             }
             dis = instructionsList.size() - jump;
@@ -859,7 +856,6 @@ public class Analyser {
                 Instructions instructions = new Instructions(Instruction.arga, 0);
                 instructionsList.add(instructions);
 
-                System.out.println("return num="+symbol.getVal());
                 analyseExpr(level);
 
                 while (!stackOp.empty()) {
