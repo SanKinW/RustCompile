@@ -8,7 +8,7 @@ public class OutToBinary {
     private List<FunctionDef> functionDefs;
     private List<Byte> output;
 
-    DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
+    //DataOutputStream out = new DataOutputStream(new FileOutputStream(new File("src/out.txt")));
 
     int magic=0x72303b3e;
     int version=0x00000001;
@@ -110,7 +110,7 @@ public class OutToBinary {
             //type
             List<Byte> type = int2bytes(1, instruction.getInstruction());
             output.addAll(type);
-            out.writeBytes(type.toString());
+            //out.writeBytes(type.toString());
 
             if(instruction.getParam() != null){
                 List<Byte>  x;
@@ -119,7 +119,7 @@ public class OutToBinary {
                 else
                     x = int2bytes(4,instruction.getParam());
                 output.addAll(x);
-                out.writeBytes(x.toString());
+                //out.writeBytes(x.toString());
             }
         }
     }
