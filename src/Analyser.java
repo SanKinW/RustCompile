@@ -79,11 +79,16 @@ public class Analyser {
         //add stacklloc
         Instructions instruction = new Instructions(Instruction.stackalloc, 0);
         initInstruction.add(instruction);
-        //add call main
-        instruction = new Instructions(Instruction.call, functionCount-1);
-        initInstruction.add(instruction);
         if (isReturn) {
+            //add call main
+            instruction.setParam(1);
+            instruction = new Instructions(Instruction.call, functionCount-1);
+            initInstruction.add(instruction);
             instruction = new Instructions(Instruction.popn, 1);
+            initInstruction.add(instruction);
+        }else {
+            //add call main
+            instruction = new Instructions(Instruction.call, functionCount-1);
             initInstruction.add(instruction);
         }
         startFunction = new FunctionDef(globalCount, 0, 0, 0, initInstruction);
