@@ -215,7 +215,7 @@ public class Format {
         for (Function function : functions) {
             if (function.getName().equals(name)) {
                 if (function.getType().equals("int")) return true;
-            } else return false;
+            }
         }
         return false;
     }

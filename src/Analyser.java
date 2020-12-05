@@ -801,6 +801,9 @@ public class Analyser {
         if (symbol.getType() != TokenType.WHILE_KW)
             throw new AnalyzeError(ErrorCode.NoWhileKeyWord);
 
+        Instructions instruction = new Instructions(Instruction.br, 0);
+        instructionsList.add(instruction);
+
         int whileStart = instructionsList.size();
         symbol = Tokenizer.readToken();
         analyseExpr(level);
@@ -811,20 +814,22 @@ public class Analyser {
         }
 
         //brTrue
-        Instructions instruction = new Instructions(Instruction.brTrue, 1);
+        instruction = new Instructions(Instruction.brTrue, 1);
         instructionsList.add(instruction);
         //br
-        Instructions jumpInstruction = new Instructions(Instruction.br, null);
+        Instructions jumpInstruction = new Instructions(Instruction.br, 0);
         instructionsList.add(jumpInstruction);
         int index = instructionsList.size();
 
         analyseBlockStmt(type, level + 1);
 
+
+        //跳至while 判断语句
+        instruction = new Instructions(Instruction.br, 0);
+        instructionsList.add(instruction);
         int whileEnd = instructionsList.size();
         int dis = whileStart - whileEnd;
-        //跳至while 判断语句
-        instruction = new Instructions(Instruction.br, dis);
-        instructionsList.add(instruction);
+        instruction.setParam(dis);
 
 
         dis = instructionsList.size() - index;

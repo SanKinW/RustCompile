@@ -28,4 +28,14 @@ public class Function {
     public Integer getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Function{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", params=" + params +
+                ", id=" + id +
+                '}';
+    }
 }
