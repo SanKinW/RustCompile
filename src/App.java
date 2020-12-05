@@ -10,12 +10,12 @@ public class App {
             Analyser.analyseProgram();
             System.out.println(Analyser.getGlobals().size());
             for (Global global : Analyser.getGlobals()) {
-                //System.out.println(global);
+                System.out.println(global);
             }
             System.out.println("-----------------------------function");
-            //System.out.println(Analyser.getStartFunction());
+            System.out.println(Analyser.getStartFunction());
             for (FunctionDef functionDef : Analyser.getFunctionDefs()) {
-                //System.out.println(functionDef);
+                System.out.println(functionDef);
             }
             System.out.println("\n----------------------------生成二进制");
             OutToBinary binary = new OutToBinary(Analyser.getGlobals(), Analyser.getStartFunction(), Analyser.getFunctionDefs());

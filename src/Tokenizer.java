@@ -20,7 +20,7 @@ public class Tokenizer {
                 Token token = getToken(inputStream);
                 if (token != null) {
                     tokenList.add(token);
-                    //System.out.print(token.getVal() + " ");
+                    System.out.print(token.getVal() + " ");
                 }
             }
             else input = inputStream.read();
