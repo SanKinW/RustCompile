@@ -59,9 +59,9 @@ public class OutToBinary {
 
             output.addAll(globalValueCount);
             output.addAll(globalValue);
-            System.out.println(globalValue.toString());
+            //System.out.println(globalValue.toString());
             //System.out.println("globalValueCount="+globalValueCount);
-            System.out.println(global.getValueItems());
+            //System.out.println(global.getValueItems());
         }
 
         //functions.count
