@@ -26,12 +26,12 @@ public class App {
         System.out.println("\n---------------生成二进制");
         OutToBinary binary = new OutToBinary(Analyser.getGlobals(), Analyser.getStartFunction(), Analyser.getFunctionDefs());
 
-        //DataOutputStream out = new DataOutputStream(new FileOutputStream(new File(args[2])));
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(new File(args[2])));
         List<Byte> bytes = binary.generate();
         byte[] resultBytes = new byte[bytes.size()];
         for (int i = 0; i < bytes.size(); ++i) {
             resultBytes[i] = bytes.get(i);
         }
-        //out.write(resultBytes);
+        out.write(resultBytes);
     }
 }
