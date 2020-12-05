@@ -32,11 +32,11 @@ public class Tokenizer {
         Token token = null;
         String val = "";
         char temp = (char) input;
-        if (Format.isAlpha(input)) {
+        if (Format.isAlpha(input) || input == '_') {
             while (true) {
                 val = val + temp;
                 input = inputStream.read();
-                if (!(Format.isAlpha(input) || Format.isDigit(input))) {
+                if (!(Format.isAlpha(input) || Format.isDigit(input) || input == '_')) {
                     String type = KeyWords.get(val);
                     if (type == null) token = new Token(TokenType.IDENT, val);
                     else {
