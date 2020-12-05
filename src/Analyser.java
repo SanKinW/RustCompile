@@ -82,6 +82,10 @@ public class Analyser {
         //add call main
         instruction = new Instructions(Instruction.call, functionCount-1);
         initInstruction.add(instruction);
+        if (isReturn) {
+            instruction = new Instructions(Instruction.popn, 1);
+            initInstruction.add(instruction);
+        }
         startFunction = new FunctionDef(globalCount, 0, 0, 0, initInstruction);
         globalCount++;
     }
@@ -788,12 +792,8 @@ public class Analyser {
                     analyseIfStmt(type, level);
                 else {
                     analyseBlockStmt(type, level + 1);
-
-                    size = instructionsList.size();
-                    if (instructionsList.get(size -1).getInstruction() != 0x49) {
                         instruction = new Instructions(Instruction.br, 0);
                         instructionsList.add(instruction);
-                    }
                 }
             }
             dis = instructionsList.size() - jump;
@@ -854,6 +854,7 @@ public class Analyser {
                 Instructions instructions = new Instructions(Instruction.arga, 0);
                 instructionsList.add(instructions);
 
+                System.out.println("return num="+symbol.getVal());
                 analyseExpr(level);
 
                 while (!stackOp.empty()) {

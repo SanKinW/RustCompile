@@ -1,5 +1,6 @@
 public enum Instruction {
     push(0x01),
+    popn(0x03),
     loca(0x0a),
     arga(0x0b),
     globa(0x0c),
