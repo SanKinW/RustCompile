@@ -165,7 +165,9 @@ public class Tokenizer {
                         break;
                     }
                 }
-            }else throw new Exception();
+            }else {
+                token = new Token(TokenType.DIV, "/");
+            }
         }
         else {
                 if (input == '+') token = new Token(TokenType.PLUS, "+");
